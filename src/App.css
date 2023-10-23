@@ -36,3 +36,42 @@
     transform: rotate(360deg);
   }
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pagination button {
+  margin: 5px;
+  padding: 5px 10px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: #f4f4f4;
+  color: #333;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background-color: #333;
+  color: #fff;
+}
+
+.pagination button:hover {
+  background-color: #333;
+  color: #fff;
+}
+
+.pagination button:disabled {
+  cursor: not-allowed;
+}
+
+/* Add additional styles for highlighting current and nearby pages */
+.pagination button.nearby {
+  background-color: #ddd;
+}
+
+.pagination button.current {
+  font-weight: bold;
+}
