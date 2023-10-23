@@ -1,26 +1,47 @@
-import {useParams} from 'react-router-dom';
-import {useState, useEffect} from 'react';
- 
-const MovieDetails = (props) => {
-    const {id} = useParams();
-    const [movie, setMovie] = useState({});
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-    useEffect(()=>{
-       fetch("http://localhost:4000/api/movies?pageSize=100&page=1")
-            .then(response => response.json())
-            .then(data => 
-                    setMovie(data.find(movie => movie._id === id))
-            )
-            .catch(error => console.log(error));
-    }, []);
+const MovieDetails = () => {
+  const { id } = useParams();
+  const [movie, setMovie] = useState(null);
+  const [error, setError] = useState(null);
 
-    return (
-        <>
-            <img src={movie.poster}  />
-            <h3>{movie.title}</h3>
-           
-        </>
-    );
+  useEffect(() => {
+    const loadMovie = async () => {
+      try {
+        const response = await fetch(`http://localhost:4000/api/movies`);
+        if (!response.ok) {
+          throw new Error();
+        }
+        const data = await response.json();
+        const selectedMovie = data.find((m) => m._id === id);
+        if (!selectedMovie) {
+          setError("La película no se encontró.");
+        } else {
+          setMovie(selectedMovie);
+        }
+      } catch (error) {
+        setError("Ocurrió un error al cargar la película.");
+      }
+    };
+
+    loadMovie();
+  }, [id]);
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  if (!movie) {
+    return <div>Cargando...</div>;
+  }
+
+  return (
+    <>
+      <img src={movie.poster} alt={movie.poster} style={{ height: "350px" }} />
+      <h3>{movie.title}</h3>
+    </>
+  );
 };
 
 export default MovieDetails;
